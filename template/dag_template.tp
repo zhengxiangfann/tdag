@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+import airflow
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from datetime import timedelta
+from datetime import datetime
+
+{% for item in imports -%}
+{{item}}
+{% endfor %}
+#-------------------------------------------------------------------------------
+args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date':{{start_date}},
+    'email': ['329472010@qq.com'],
+    'email_on_failure': {{email_on_failure}},
+    'email_on_retry': {{email_on_retry}},
+}
+
+#-------------------------------------------------------------------------------
+# DAG id '' 必须是unique的, 一般与文件名相同
+dag = DAG(
+    '{{dag_id}}',
+    default_args=args,
+    schedule_interval='{{interval}}'
+    )
+{% for item in operators %}
+# -------------------------------------------------------------------------------
+# operator {{loop.index}}: {{item}}
+{{item.0}} = PythonOperator(
+    task_id='{{item.0}}',
+    python_callable={{item.1}}().run_command,
+    dag=dag)
+{% endfor %}
+# -------------------------------------------------------------------------------
+#  依赖关系 
+# start
+{% for item in depends -%}
+{{item}}
+{% endfor %}
+# end
+
