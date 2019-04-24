@@ -12,6 +12,7 @@
 
 import re
 import ply.lex as lex
+import sqlparse
 
 
 def read_sql(sql_path):
@@ -86,7 +87,8 @@ def parse_depends(sql_path):
         if table_names:
             for tb in table_names[1]:
                 depends.append('{} >> {}'.format(tb, table_names[0]))
-            depends_res.append({'depends': depends, 'sql': sql_str, 'obj_table': table_names[0]})
+            sql_str_format = sqlparse.format(sql_str, reindent=True, keyword_case='upper')
+            depends_res.append({'depends': depends, 'sql': sql_str_format, 'obj_table': table_names[0]})
     return depends_res
 
 

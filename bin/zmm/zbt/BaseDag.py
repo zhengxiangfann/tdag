@@ -17,7 +17,7 @@ class BaseDag(object):
 
 
     def __init__(self, conf=None):
-        self.conf = {'host':'192.168.1.1', 'port':10000, 'username':'zhengxf', 'passwd':'zhengxf'}
+        self.conf = {'host':'10.240.20.20', 'port':10000, 'username':'zheng.xf', 'passwd':'zheng.xf'}
         self.cmd = None
 
     def _build_cmd(self):

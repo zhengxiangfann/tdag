@@ -12,7 +12,7 @@
 from BaseDag import BaseDag
 
 
-class {classname}(BaseDag):
+class Mzsaleinvst20172019(BaseDag):
     '''
 
     auto create class and fill sqll
@@ -23,8 +23,19 @@ class {classname}(BaseDag):
         BaseDag.__init__(self)
 
     def run_command(self):
-        self.sql = """{sql}"""
+        self.sql = """DROP TABLE belle_sh.mz_sale_inv_st_2017_2019;
+
+
+CREATE TABLE belle_sh.mz_sale_inv_st_2017_2019 AS
+SELECT *
+FROM belle_sh.mzj_pmt_sku_store_avg_st_17
+UNION ALL
+SELECT *
+FROM belle_sh.mz_sku_store_avg_st_18
+UNION ALL
+SELECT *
+FROM belle_sh.mzj_pmt_sku_store_avg_st_19"""
         self.call()
 
 if __name__ == '__main__':
-    {classname}().run_command()
+    Mzsaleinvst20172019().run_command()
