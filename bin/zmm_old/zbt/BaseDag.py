@@ -10,8 +10,8 @@ import subprocess
 class BaseDag(object):
 
     def __init__(self, conf=None):
-        self.conf = {'host': 'hive.bjds.belle.lan', 'port': 10001,
-                     'username': '123456', 'passwd': '123456'}
+        self.conf = {'host': '10.240.20.20', 'port': 10000,
+                     'username': 'zheng.xf', 'passwd': 'zheng.xf'}
         self.cmd = None
 
     def _build_cmd(self):

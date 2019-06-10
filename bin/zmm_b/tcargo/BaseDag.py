@@ -5,14 +5,16 @@
 import sys
 import tempfile
 import subprocess
+import libconst
 
 
 class BaseDag(object):
 
     def __init__(self, conf=None):
         self.conf = {'host': 'hive.bjds.belle.lan', 'port': 10001,
-                     'username': '123456', 'passwd': '123456'}
+                     'username': 'zheng.xf', 'passwd': 'zheng.xf'}
         self.cmd = None
+        self.params = libconst.params
 
     def _build_cmd(self):
         self.cmd = 'beeline -u "jdbc:hive2://{host}:{port}" -n {username} -p {passwd} -e"{sql}"'.format(
@@ -25,7 +27,7 @@ class BaseDag(object):
         print('cmd %s' % self.cmd)
 
     def run_command(self):
-        self.sql = """select * from belle_jw.pro_month_sku_sal_18 limit 1"""
+        self.sql = """select * from belle_jw.pro_month_sku_sal_18 limit 1""".format(**self.params)
         self.call()
 
 #    def call(self):

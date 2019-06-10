@@ -11,7 +11,8 @@
 # **********************************************************
 from BaseDag import BaseDag
 
-class {classname}(BaseDag):
+
+class Optransbyskufinal20190421spr(BaseDag):
     '''
 
     auto create class and fill sqll
@@ -22,8 +23,17 @@ class {classname}(BaseDag):
         BaseDag.__init__(self)
 
     def run_command(self):
-        self.sql = """{sql}""".format(**self.params)
+        self.sql = """DROP  TABLE belle_sh.op_trans_by_sku_final_20190421_spr;
+CREATE TABLE belle_sh.op_trans_by_sku_final_20190421_spr AS
+SELECT *
+FROM belle_sh.yl_trans_by_sku_final_20190421_spr_v10
+WHERE label_sku_logic_v2 NOT IN (2,3)
+UNION ALL
+SELECT *
+FROM belle_sh.xw_trans_by_sku_final_20190421_spr_v11a
+WHERE label_sku_logic_v2 IN (2,3)
+;"""
         self.call()
 
 if __name__ == '__main__':
-    {classname}().run_command()
+    Optransbyskufinal20190421spr().run_command()
