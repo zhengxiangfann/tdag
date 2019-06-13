@@ -5,6 +5,7 @@
 import sys
 import tempfile
 import subprocess
+import libconst
 
 
 class BaseDag(object):
@@ -13,6 +14,7 @@ class BaseDag(object):
         self.conf = {'host': 'hive.bjds.belle.lan', 'port': 10001,
                      'username': '123456', 'passwd': '123456'}
         self.cmd = None
+        self.params = libconst.params
 
     def _build_cmd(self):
         self.cmd = 'beeline -u "jdbc:hive2://{host}:{port}" -n {username} -p {passwd} -e"{sql}"'.format(
@@ -25,37 +27,16 @@ class BaseDag(object):
         print('cmd %s' % self.cmd)
 
     def run_command(self):
-        self.sql = """select * from belle_jw.pro_month_sku_sal_18 limit 1"""
+        self.sql = """select * from belle_jw.pro_month_sku_sal_18 limit 1""".format(
+            sqlf.params)
         self.call()
-
-#    def call(self):
-#        self._build_cmd()
-#        process = subprocess.Popen(self.cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#        returncode = process.wait()
-#        if returncode == 0:
-#            err = process.stderr.read()
-#            try:
-#                err_list = err.split('\n')
-#                for err_str in err_list :
-#                    if err_str.find('Error', 0) >= 0 or err_str.find('fail') >=0:
-#                        print(err_str)
-#                        sys.exit(1)
-#            except:
-#                print('============')
-#            print('Success')
-#            return True
-#        else:
-#            print('retCode: ', returncode)
-#            sys.exit(1)
-#
 
     def call(self):
         out_temp = tempfile.TemporaryFile(mode='w+')
         fileno = out_temp.fileno()
-
         self._build_cmd()
-        process = subprocess.Popen(
-            self.cmd, shell=True, stdout=fileno, stderr=fileno)
+        #process = subprocess.Popen(self.cmd, shell=True, stdout=fileno, stderr=fileno)
+        process = subprocess.Popen(self.cmd, shell=True, stdout=fileno,)
         returncode = process.wait()
         if returncode == 0:
             out_temp.seek(0)
