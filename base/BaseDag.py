@@ -1,20 +1,31 @@
 #!/usr/bin/env python
 # coding:utf-8
 
-
 import sys
 import tempfile
 import subprocess
 import libconst
 
-
 class BaseDag(object):
 
     def __init__(self, conf=None):
-        self.conf = {'host': 'hive.bjds.belle.lan', 'port': 10001,
-                     'username': '123456', 'passwd': '123456'}
+        self.conf = {'host': 'hive.bjds.belle.lan',
+                     'port': 10001,
+                     'username': '123456',
+                     'passwd': '123456'
+                     }
         self.cmd = None
         self.params = libconst.params
+
+    def write_to_mysql(self, sql):
+        try:
+            conn = pymysql.connect(
+                host='localhost', user='writer', password='writer', db='airflow', charset='utf8')
+            cur = conn.cursor()
+            cur.execute(sql)
+            print(cur.lastrowid)
+        except BaseException as ex:
+            print(ex)
 
     def _build_cmd(self):
         self.cmd = 'beeline -u "jdbc:hive2://{host}:{port}" -n {username} -p {passwd} -e"{sql}"'.format(
@@ -54,12 +65,6 @@ class BaseDag(object):
         else:
             print('retCode: ', returncode)
             sys.exit(1)
-
-    def catch_error(self):
-        pass
-
-    def signal(self):
-        pass
 
 
 if __name__ == '__main__':

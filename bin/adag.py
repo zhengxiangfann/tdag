@@ -16,7 +16,7 @@ auto dag
 
 from __future__ import print_function
 # import logging
-# import os
+import os
 import time
 import sys
 import argparse
@@ -43,14 +43,23 @@ def auto_dag():
     parser.add_argument('-p', '--package', dest='package',
                         help='保存的文件路径', nargs='?', default="", required=True)
 
+    parser.add_argument('-y', '--yes', dest='ifyes',
+                        help='是否需要确认', nargs='?', default="False", required=False)
+
     args = parser.parse_args()
-    inp = input("dagID={},sql_path={},interval={},package={}\n(Are you sure? Y or N):".format(
-        args.dagID, args.sql_path, args.interval, args.package))
-    if not inp or inp in ('N', 'n', 'no', 'NO', 'no'):
-        sys.exit()
+
+    if not args.ifyes:
+        inp = input("dagID={},sql_path={},interval={},package={}\n(Are you sure? Y or N):".format(
+            args.dagID, args.sql_path, args.interval, args.package))
+        if not inp or inp in ('N', 'n', 'no', 'NO', 'no'):
+            sys.exit()
 
     depends_res = parse_depends(args.sql_path)
-    build_pyfile(depends_res, args.package)
+
+    cur_path= os.path.dirname(os.path.abspath(__file__))
+    class_path = os.path.join(cur_path, "../template/class_template.tp")
+    build_pyfile(depends_res, args.package, class_path)
+
     depends = [sub_item for item in depends_res for sub_item in item['depends']]
     object_table = set([item['obj_table'] for item in depends_res])
     depends_final = []
